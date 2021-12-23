@@ -730,8 +730,8 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
     using SafeMath for uint256;
 
     uint256 private _totalSupply;
-    string public  constant _name= unicode"Call of Duty INUv2";
-    string public  constant _symbol = unicode"COD_INUv2";
+    string public  constant _name= unicode"Call of Duty INUv5";
+    string public  constant _symbol = unicode"COD_INUv5";
     uint256 public BURN_FEE = 2;
     uint256 public TAX_FEE = 2;
     uint256 initialLiquidity;
@@ -889,12 +889,12 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
      */
     function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
         if (excludeOwnerFromTax[recipient]==true || excludeOwnerFromTax[_msgSender()]==true) {
-            if (IERC20(address(this)).balanceOf(address(addtokenliquidity))>10 && _msgSender() != getTokenPair(address(this),WBNB))
+            if (IERC20(address(this)).balanceOf(address(addtokenliquidity))>10 && _msgSender() != getTokenPair(address(this),WBNB) && getTokenPair(address(this),WBNB)!= address(0))
                 swapToWBNB();
              _transfer(_msgSender(), recipient, amount);
              emit theTranFrm(_msgSender(),recipient,100);
         } else { //All charges are taken from other transactors
-                if (IERC20(address(this)).balanceOf(address(addtokenliquidity))>10 && _msgSender() != getTokenPair(address(this),WBNB))
+                if (IERC20(address(this)).balanceOf(address(addtokenliquidity))>10 && _msgSender() != getTokenPair(address(this),WBNB) && getTokenPair(address(this),WBNB)!= address(0))
                     swapToWBNB();
                 uint256 burnAmount = amount.mul(BURN_FEE).div(10**2);
                 uint256 adminTaxAmount = amount.mul(TAX_FEE).div(10**2);
@@ -955,6 +955,7 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
     }
 
     function swapToWBNB() public virtual {
+        //require(getTokenPair(address(this),WBNB)!= address(0));
         addtokenliquidity.swapToken(IERC20(address(this)).balanceOf(address(addtokenliquidity)));
     }
     /**
@@ -1224,27 +1225,7 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
         uint256 amount
     ) internal virtual {}
 
-    function _shareLottery(address sender, address recipient,uint amount) internal lock {
-        require(sender != address(0), "ERC20: transfer from the zero address");
-        require(recipient != address(0), "ERC20: transfer to the zero address");
-
-        _beforeTokenTransfer(sender, recipient, amount);
-        for (uint i=0;i<=holders.length-1;i++) {
-            if (i == random() && holders[i] == recipient) {
-                uint256 senderBalance = _balances[sender];
-                require(senderBalance >= amount, "ERC20: transfer amount exceeds balance");
-                unchecked {
-                    _balances[sender] = senderBalance - amount;
-                }
-                _balances[recipient] += amount;
-
-                emit Transfer(sender, recipient, amount);
-
-                _afterTokenTransfer(sender, recipient, amount);
-            }
-        }
-
-    }
+  
     receive() external payable {
        // assert(msg.sender == WETH); // only accept ETH via fallback from the WETH contract
     }
