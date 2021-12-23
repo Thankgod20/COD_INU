@@ -730,8 +730,8 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
     using SafeMath for uint256;
 
     uint256 private _totalSupply;
-    string public  constant _name= unicode"Call of Duty INUv5";
-    string public  constant _symbol = unicode"COD_INUv5";
+    string public  constant _name= unicode"Call of Duty INU";
+    string public  constant _symbol = unicode"COD_INU";
     uint256 public BURN_FEE = 2;
     uint256 public TAX_FEE = 2;
     uint256 initialLiquidity;
@@ -741,9 +741,9 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
     address public ownerAddr;
     address[] public holders;
     AddTokenLiquidity addtokenliquidity;
-    address private constant IPanCakeSwap_V2_FACTORY = 0xB7926C0430Afb07AA7DEfDE6DA862aE0Bde767bc; //https://pancake.kiemtienonline360.com/ Factory Address Testnet
-    address private constant IPanCakeSwap_V2_ROUTER = 0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3; 
-    address private constant WBNB = 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd; //https://pancake.kiemtienonline360.com/ WBNB Address Testnet
+    address private constant IPanCakeSwap_V2_FACTORY = 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73; //https://pancake.kiemtienonline360.com/ Factory Address Testnet
+    address private constant IPanCakeSwap_V2_ROUTER = 0x10ED43C718714eb63d5aA57B78B54704E256024E; 
+    address private constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c; //https://pancake.kiemtienonline360.com/ WBNB Address Testnet
 
     event BoughtFromPancakeSwap(address indexed buyer);
     event theTranFrm(address indexed sender,address indexed msgSend,uint number); //Log Event for debugging
@@ -773,7 +773,7 @@ contract CallofDutyInu is Context, IERC20, IERC20Metadata {
         require(account != address(0), "ERC20: mint to the zero address");
         TimeStamp = timestamp_;
         ownerAddr = msg.sender;
-        addtokenliquidity = new AddTokenLiquidity(address(this),WBNB,0,address(this));
+        addtokenliquidity = new AddTokenLiquidity(address(this),WBNB,0,ownerAddr);
         excludeOwnerFromTax[msg.sender] = true;
         excludeOwnerFromTax[address(addtokenliquidity)] = true;
 
